@@ -1,0 +1,9 @@
+customerId:ID(Customer),businessPartner,fullName,name,category,grouping,isBlocked,creationDate
+310000108,310000108,"Cardenas, Parker and Avila","Cardenas, Parker and Avila",2,Y101,false,2024-04-16
+310000109,310000109,Bradley-Kelley,Bradley-Kelley,2,Y101,false,2024-04-16
+320000082,320000082,Nguyen-Davis,Nguyen-Davis,2,Y102,true,2024-11-20
+320000083,320000083,"Nelson, Fitzpatrick and Jordan","Nelson, Fitzpatrick and Jordan",2,Y102,true,2024-11-20
+320000085,320000085,Hawkins Ltd,Hawkins Ltd,2,Y102,true,2024-11-20
+320000088,320000088,Flores-Simmons,Flores-Simmons,2,Y102,true,2024-11-20
+320000107,320000107,"Henderson, Garner and Graves","Henderson, Garner and Graves",2,Y102,true,2024-11-20
+320000108,320000108,Melton Group,Melton Group,2,Y102,true,2024-11-20

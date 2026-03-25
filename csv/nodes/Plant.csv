@@ -1,0 +1,45 @@
+plantId:ID(Plant),name,salesOrganization,companyCode,distributionChannel,division,addressId,factoryCalendar
+1001,Lake Christopher Plant,ABCD,1001,80,99,93,IN
+1002,Lake Erica Plant,ABCD,1002,80,99,94,IN
+1003,North Timothybury Plant,ABCD,1003,80,99,95,IN
+1005,Port Kevin Plant,ABCD,1005,80,99,96,IN
+1006,Lake Andreafort Plant,ABCD,1006,80,99,97,IN
+1007,Rossside Plant,ABCD,1007,80,99,98,IN
+1010,Kennedychester Plant,ABCD,1010,80,99,99,IN
+1011,North Joseph Plant,ABCD,1011,80,99,100,IN
+1012,Lake Ashley Plant,ABCD,1012,80,99,101,IN
+1301,North Matthewview Plant,ABCD,1301,80,99,132,IN
+1302,Grahamberg Plant,ABCD,1302,80,99,133,IN
+1303,Lake Deborahland Plant,ABCD,1303,80,99,134,IN
+1920,Garyfort Plant,ABCD,1920,80,99,22,IN
+1921,Port Alyssatown Plant,ABCD,1921,80,99,900,IN
+1922,Courtneyshire Plant,ABCD,1922,80,99,901,IN
+AP05,New Justin Plant,ABCD,AP05,80,99,791,IN
+AS05,Mcneilville Plant,ABCD,AS05,80,99,792,IN
+BH05,Bradfordburgh Plant,ABCD,BH05,80,99,793,IN
+CH07,New Katie Plant,ABCD,CH07,80,99,794,IN
+DL05,North Mark Plant,ABCD,DL05,80,99,795,IN
+DL07,Jessicaview Plant,ABCD,DL07,80,99,796,IN
+GJ05,Ramoston Plant,ABCD,GJ05,80,99,797,IN
+HR00,North Eric Plant,ABCD,HR00,80,99,902,IN
+HR05,East Darren Plant,ABCD,HR05,80,99,798,IN
+HR07,Brooksfurt Plant,ABCD,HR07,80,99,799,IN
+JH05,Port Kristen Plant,ABCD,JH05,80,99,800,IN
+KA05,Jessicaside Plant,ABCD,KA05,80,99,801,IN
+KA07,Stevenmouth Plant,ABCD,KA07,80,99,802,IN
+KR05,Sotoport Plant,ABCD,KR05,80,99,803,IN
+KR07,Simmonshaven Plant,ABCD,KR07,80,99,804,IN
+MH05,East Adrianamouth Plant,ABCD,MH05,80,99,805,IN
+MH07,North Edwin Plant,ABCD,MH07,80,99,806,IN
+MP07,Port Nathan Plant,ABCD,MP07,80,99,807,IN
+PB05,Lake Kristamouth Plant,ABCD,PB05,80,99,808,IN
+PB07,South Mariaton Plant,ABCD,PB07,80,99,809,IN
+RJ07,Bridgetton Plant,ABCD,RJ07,80,99,810,IN
+TL05,New Jennifer Plant,ABCD,TL05,80,99,811,IN
+TL07,Lake Rodneyport Plant,ABCD,TL07,80,99,812,IN
+TM05,Fosterstad Plant,ABCD,TM05,80,99,813,IN
+TM07,West Christopher Plant,ABCD,TM07,80,99,814,IN
+UP05,South Lori Plant,ABCD,UP05,80,99,815,IN
+UP07,Byrdview Plant,ABCD,UP07,80,99,816,IN
+WB05,Cookmouth Plant,ABCD,WB05,80,99,817,IN
+WB07,South Melvinburgh Plant,ABCD,WB07,80,99,818,IN
