@@ -66,7 +66,7 @@ The resulting graph enables end-to-end traversal of business processes, supporti
 
 ---
 
-## Graph Ingestion Neo4j Aura
+## Graph Ingestion into Neo4j Aura
 The data ingestion pipeline follows a two-stage transformation process.
 
 First, the raw JSONL files are converted into structured CSV files, separating nodes and relationships to align with Neo4j’s graph model.
@@ -80,7 +80,8 @@ This hybrid approach combines the efficiency of bulk import with the flexibility
 
 ---
 
-## 
+## Query Processing
+
 
 
 
