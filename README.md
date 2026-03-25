@@ -82,6 +82,60 @@ This hybrid approach combines the efficiency of bulk import with the flexibility
 
 ## Query Processing
 
+A structured query layer is implemented to translate user intent into predefined graph operations.
+The commands given by the user are then converted into Cypher queries and executed against the Neo4j graph.
+
+This abstraction ensures:
+Consistent query execution
+Clear separation between user input and database logic
+Controlled access to the graph structure
+
+<img width="387" height="816" alt="Screenshot 2026-03-25 at 4 20 20 PM" src="https://github.com/user-attachments/assets/8057e992-fd58-462a-8a5f-cffb9b161806" />
+
+---
+
+## LLM Interface & Query Control
+
+A Large Language Model (LLM) is integrated via Groq to enable natural language interaction with the system, allowing users to query the graph intuitively without needing to understand its underlying structure. User inputs are processed through the Groq API and translated into structured commands that are passed to the query layer, which then executes corresponding Cypher queries on the Neo4j graph. This design creates a seamless bridge between natural language input and graph-based retrieval, ensuring consistent and efficient interpretation of user queries.
+
+---
+
+## Graph Visualization (3D)
+
+The constructed graph is visualized in an interactive 3D environment to support exploration and analysis.
+
+The visualization enables:
+
+Clear understanding of entity relationships
+Visual tracing of end-to-end O2C flows
+Identification of missing or incomplete links
+
+Node types are visually distinguished, and relationships are represented as directional connections, allowing users to intuitively navigate complex transactional structures.
+
+<img width="1337" height="877" alt="Screenshot 2026-03-25 at 4 25 53 PM" src="https://github.com/user-attachments/assets/b22719bb-e35c-48f1-9d0d-6523a9724ce5" />
 
 
+---
 
+## UI Development
+
+A lightweight user interface is developed to integrate all components of the system into a single interaction flow.
+
+The UI allows users to:
+
+Input natural language queries
+Trigger graph-based analysis
+View structured outputs and graph insights
+
+The interface acts as a bridge between the user, the LLM layer, and the graph database.
+
+---
+## Deployment
+
+---
+
+## Conclusion
+
+This project demonstrates how large-scale transactional data can be transformed into a graph-based intelligence system. By combining graph databases, structured query abstraction, and LLM-based interaction with strict guardrails, the system enables intuitive yet controlled exploration of complex business processes.
+
+It highlights the potential of graph-driven architectures in improving traceability, analysis, and decision-making within enterprise workflows.
