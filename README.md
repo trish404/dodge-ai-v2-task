@@ -42,7 +42,7 @@ Each .jsonl file contains line-separated JSON records.
 
 These records collectively capture different stages of the O2C lifecycle, with implicit relationships formed through shared identifiers (e.g., order IDs, document numbers, customer IDs). The dataset is highly normalized and distributed, requiring integration across multiple sources to reconstruct complete business flows.
 
---
+---
 
 ## Graph Construction
 
@@ -64,7 +64,7 @@ The resulting graph enables end-to-end traversal of business processes, supporti
 <img width="996" height="805" alt="Screenshot 2026-03-25 at 9 24 07 AM" src="https://github.com/user-attachments/assets/ce20fe29-0a13-4363-bd9b-69cd44e311e1" />
 
 
---
+---
 
 ##
 
