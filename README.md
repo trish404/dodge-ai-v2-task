@@ -66,10 +66,21 @@ The resulting graph enables end-to-end traversal of business processes, supporti
 
 ---
 
-##
+## Graph Ingestion Neo4j Aura
+The data ingestion pipeline follows a two-stage transformation process.
 
+First, the raw JSONL files are converted into structured CSV files, separating nodes and relationships to align with Neo4j’s graph model.
 
+Next, these CSV files are ingested into Neo4j using a Python-based import script connected to Neo4j Aura. The script executes batched Cypher queries to efficiently create nodes and relationships while enforcing uniqueness through schema constraints.
 
+For large-scale loading, Neo4j’s bulk import tool (neo4j-admin) is also used to initialize the graph directly from CSV files.
+
+This hybrid approach combines the efficiency of bulk import with the flexibility of Cypher-based ingestion, enabling scalable and reliable graph construction in Neo4j Aura.
+<img width="1534" height="844" alt="Screenshot 2026-03-25 at 3 29 15 PM" src="https://github.com/user-attachments/assets/f3479686-0009-440f-8ee1-fb493a93ec8d" />
+
+---
+
+## 
 
 
 
