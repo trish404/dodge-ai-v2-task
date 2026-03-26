@@ -8,39 +8,63 @@ The system integrates Neo4j Aura for scalable graph storage, a query abstraction
 
 ---
 
+## Repository Structure
+
+```
+├── csv/                        # Generated CSV files (nodes + relationships)
+│   ├── nodes/
+│   ├── relationships/
+├── deployment/                 # Next.js web application
+│   ├── app/                    # Next.js app directory (pages & API routes)
+│   ├── components/             # React UI components
+│   ├── lib/                    # Utility functions and graph query logic
+│   ├── public/                 # Static assets (schema diagram)
+│   ├── next.config.mjs
+│   ├── package.json
+│   ├── postcss.config.js
+│   └── tailwind.config.js
+├── auraimport.py               # Python script for Neo4j Aura ingestion
+├── bulk.sh                     # Shell script for bulk CSV import
+├── jsonl2csv.py                # JSONL → CSV transformation script
+├── load.cypher                 # Cypher queries for schema constraints & loading
+├── .gitignore
+└── README.md
+```
+
+---
+
 ## Pipeline Overview
 
-The system follows a complete pipeline:
+The system follows a complete end-to-end pipeline:
 
-1. Dataset ingestion from JSONL files  
-2. Graph construction and modeling  
-3. Data ingestion into Neo4j Aura  
-4. Graph visualization (3D)  
-5. Query processing via a structured query layer  
-6. Natural language interface using an LLM  
+1. Dataset ingestion from JSONL files
+2. Graph construction and modeling
+3. Data ingestion into Neo4j Aura
+4. Graph visualization (3D)
+5. Query processing via a structured query layer
+6. Natural language interface using an LLM
 7. Guardrails for controlled and safe execution
 8. UI Development
 9. Deployment
 
 ---
 
-## Dataset 
-The dataset is organized as a collection of structured .jsonl files distributed across multiple folders, each representing a distinct business entity within the Order-to-Cash (O2C) process.
+## Dataset
 
-Each folder corresponds to a specific domain, such as:
+The dataset is organized as a collection of structured `.jsonl` files distributed across multiple folders, each representing a distinct business entity within the Order-to-Cash (O2C) process.
 
-sales_order_headers, sales_order_items, sales_order_schedule_lines
-outbound_delivery_headers, outbound_delivery_items
-billing_document_headers, billing_document_items, billing_document_cancellations
-journal_entry_items_accounts_receivable
-payments_accounts_receivable
-business_partners, business_partner_addresses
-products, product_descriptions, product_plants, product_storage_locations
-plants, customer_company_assignments, customer_sales_area_assignments
+Each folder corresponds to a specific domain:
 
-Each .jsonl file contains line-separated JSON records.
+- `sales_order_headers`, `sales_order_items`, `sales_order_schedule_lines`
+- `outbound_delivery_headers`, `outbound_delivery_items`
+- `billing_document_headers`, `billing_document_items`, `billing_document_cancellations`
+- `journal_entry_items_accounts_receivable`
+- `payments_accounts_receivable`
+- `business_partners`, `business_partner_addresses`
+- `products`, `product_descriptions`, `product_plants`, `product_storage_locations`
+- `plants`, `customer_company_assignments`, `customer_sales_area_assignments`
 
-These records collectively capture different stages of the O2C lifecycle, with implicit relationships formed through shared identifiers (e.g., order IDs, document numbers, customer IDs). The dataset is highly normalized and distributed, requiring integration across multiple sources to reconstruct complete business flows.
+Each `.jsonl` file contains line-separated JSON records that collectively capture different stages of the O2C lifecycle, with implicit relationships formed through shared identifiers (e.g., order IDs, document numbers, customer IDs). The dataset is highly normalized and distributed, requiring integration across multiple sources to reconstruct complete business flows.
 
 ---
 
@@ -48,55 +72,82 @@ These records collectively capture different stages of the O2C lifecycle, with i
 
 The graph is constructed by transforming the distributed JSONL dataset into a unified structure of interconnected nodes and relationships in Neo4j.
 
-Each dataset folder is mapped to a corresponding entity (e.g., Customer, SalesOrder, Delivery, Invoice, Payment, Product, Plant), with item-level granularity preserved through intermediate nodes such as SalesOrderItem, DeliveryItem, and InvoiceItem.
+Each dataset folder is mapped to a corresponding entity (e.g., `Customer`, `SalesOrder`, `Delivery`, `Invoice`, `Payment`, `Product`, `Plant`), with item-level granularity preserved through intermediate nodes such as `SalesOrderItem`, `DeliveryItem`, and `InvoiceItem`.
 
 Relationships are created by resolving shared identifiers across datasets, reconstructing the full Order-to-Cash lifecycle — from customer orders to fulfillment, billing, accounting, and payment clearance.
 
-Key design considerations:
+**Key design considerations:**
 
-Nodes are created using unique identifiers to prevent duplication
-Relationships are only established when valid references exist
-Item-level linking ensures traceability across products and transactions
-Incomplete flows are preserved to enable anomaly detection
+- Nodes are created using unique identifiers to prevent duplication
+- Relationships are only established when valid references exist
+- Item-level linking ensures traceability across products and transactions
+- Incomplete flows are preserved to enable anomaly detection
 
 The resulting graph enables end-to-end traversal of business processes, supporting both analytical queries and real-time inspection of transactional flows.
 
-<img width="996" height="805" alt="Screenshot 2026-03-25 at 9 24 07 AM" src="https://github.com/user-attachments/assets/ce20fe29-0a13-4363-bd9b-69cd44e311e1" />
+**Graph Schema:**
 
+<img width="839" height="790" alt="Screenshot 2026-03-26 at 10 44 30 AM" src="https://github.com/user-attachments/assets/818ac6cb-5025-41df-a601-4709c2e916e4" />
 
 ---
 
 ## Graph Ingestion into Neo4j Aura
+
 The data ingestion pipeline follows a two-stage transformation process.
 
-First, the raw JSONL files are converted into structured CSV files, separating nodes and relationships to align with Neo4j’s graph model.
+**Stage 1 — JSONL to CSV (`jsonl2csv.py`)**
 
-Next, these CSV files are ingested into Neo4j using a Python-based import script connected to Neo4j Aura. The script executes batched Cypher queries to efficiently create nodes and relationships while enforcing uniqueness through schema constraints.
+Raw JSONL files are converted into structured CSV files, separating nodes and relationships to align with Neo4j's graph model.
 
-For large-scale loading, Neo4j’s bulk import tool (neo4j-admin) is also used to initialize the graph directly from CSV files.
+```bash
+python jsonl2csv.py
+```
+
+This produces CSV files inside the `csv/` directory, organized by entity type.
+
+**Stage 2 — Ingestion into Neo4j Aura**
+
+Two ingestion methods are supported:
+
+*Option A — Python-based Cypher import (`auraimport.py`):*
+
+```bash
+python auraimport.py
+```
+
+Connects to Neo4j Aura and executes batched Cypher queries to create nodes and relationships while enforcing uniqueness through schema constraints.
+
+*Option B — Bulk import via shell script (`bulk.sh`):*
+
+```bash
+bash bulk.sh
+```
+You can also run the Cypher constraints and load queries manually using `load.cypher` in the Neo4j Aura browser console.
 
 This hybrid approach combines the efficiency of bulk import with the flexibility of Cypher-based ingestion, enabling scalable and reliable graph construction in Neo4j Aura.
-<img width="1534" height="844" alt="Screenshot 2026-03-25 at 3 29 15 PM" src="https://github.com/user-attachments/assets/f3479686-0009-440f-8ee1-fb493a93ec8d" />
+
+<img width="1534" height="844" alt="Screenshot 2026-03-25 at 3 29 15 PM" src="https://github.com/user-attachments/assets/f3479686-0009-440f-8ee1-fb493a93ec8d" />
 
 ---
 
 ## Query Processing
 
-A structured query layer is implemented to translate user intent into predefined graph operations.
-The commands given by the user are then converted into Cypher queries and executed against the Neo4j graph.
+A structured query layer is implemented to translate user intent into predefined graph operations. Commands given by the user are converted into Cypher queries and executed against the Neo4j graph.
 
 This abstraction ensures:
-Consistent query execution
-Clear separation between user input and database logic
-Controlled access to the graph structure
+- Consistent query execution
+- Clear separation between user input and database logic
+- Controlled access to the graph structure
 
-<img width="387" height="816" alt="Screenshot 2026-03-25 at 4 20 20 PM" src="https://github.com/user-attachments/assets/8057e992-fd58-462a-8a5f-cffb9b161806" />
+<img width="387" height="816" alt="Screenshot 2026-03-25 at 4 20 20 PM" src="https://github.com/user-attachments/assets/8057e992-fd58-462a-8a5f-cffb9b161806" />
 
 ---
 
 ## LLM Interface & Query Control
 
-A Large Language Model (LLM) is integrated via Groq to enable natural language interaction with the system, allowing users to query the graph intuitively without needing to understand its underlying structure. User inputs are processed through the Groq API and translated into structured commands that are passed to the query layer, which then executes corresponding Cypher queries on the Neo4j graph. This design creates a seamless bridge between natural language input and graph-based retrieval, ensuring consistent and efficient interpretation of user queries.
+A Large Language Model (LLM) is integrated via Groq to enable natural language interaction with the system, allowing users to query the graph intuitively without needing to understand its underlying structure. User inputs are processed through the Groq API and translated into structured commands that are passed to the query layer, which then executes corresponding Cypher queries on the Neo4j graph.
+
+This design creates a seamless bridge between natural language input and graph-based retrieval, ensuring consistent and efficient interpretation of user queries.
 
 ---
 
@@ -105,32 +156,134 @@ A Large Language Model (LLM) is integrated via Groq to enable natural language i
 The constructed graph is visualized in an interactive 3D environment to support exploration and analysis.
 
 The visualization enables:
-
-Clear understanding of entity relationships
-Visual tracing of end-to-end O2C flows
-Identification of missing or incomplete links
+- Clear understanding of entity relationships
+- Visual tracing of end-to-end O2C flows
+- Identification of missing or incomplete links
 
 Node types are visually distinguished, and relationships are represented as directional connections, allowing users to intuitively navigate complex transactional structures.
 
-<img width="1337" height="877" alt="Screenshot 2026-03-25 at 4 25 53 PM" src="https://github.com/user-attachments/assets/b22719bb-e35c-48f1-9d0d-6523a9724ce5" />
-
+<img width="1337" height="877" alt="Screenshot 2026-03-25 at 4 25 53 PM" src="https://github.com/user-attachments/assets/b22719bb-e35c-48f1-9d0d-6523a9724ce5" />
 
 ---
 
 ## UI Development
 
-A lightweight user interface is developed to integrate all components of the system into a single interaction flow.
+A lightweight Next.js web application (located in `deployment/`) integrates all components of the system into a single interaction flow.
 
 The UI allows users to:
-
-Input natural language queries
-Trigger graph-based analysis
-View structured outputs and graph insights
+- Input natural language queries
+- Trigger graph-based analysis
+- View structured outputs and graph insights
 
 The interface acts as a bridge between the user, the LLM layer, and the graph database.
 
 ---
+
 ## Deployment
+
+The web application is a **Next.js** app located in the `deployment/` directory.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm v9 or higher
+- A running Neo4j Aura instance with the graph already ingested (see [Graph Ingestion](#graph-ingestion-into-neo4j-aura))
+- A Groq API key
+
+### Environment Variables
+
+Create a `.env.local` file inside the `deployment/` directory:
+
+```bash
+cd deployment
+cp .env.example .env.local   # if an example file exists, otherwise create it manually
+```
+
+Add the following variables to `.env.local`:
+
+```env
+NEO4J_URI=neo4j+s://<your-aura-instance-id>.databases.neo4j.io
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=<your-neo4j-aura-password>
+GROQ_API_KEY=<your-groq-api-key>
+```
+
+### Install Dependencies
+
+```bash
+cd deployment
+npm install
+```
+
+### Run in Development Mode
+
+```bash
+npm run dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+### Build and Run in Production Mode
+
+```bash
+npm run build
+npm start
+```
+
+The production server will start on port `3000` by default.
+
+### Deploy to Vercel (Recommended)
+
+The app can be deployed to [Vercel](https://vercel.com/) directly from the `deployment/` folder:
+
+1. Install the Vercel CLI:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. From the `deployment/` directory, run:
+   ```bash
+   vercel
+   ```
+
+3. When prompted, set the **root directory** to `deployment/`.
+
+4. Add the environment variables (`NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `GROQ_API_KEY`) in the Vercel project settings under **Settings → Environment Variables**.
+
+5. Redeploy after adding environment variables:
+   ```bash
+   vercel --prod
+   ```
+
+> **Note:** Ensure your Neo4j Aura instance allows external connections from Vercel's IP range, or use connection pooling if needed.
+
+---
+
+## End-to-End Setup Summary
+
+For a clean setup from scratch, follow this sequence:
+
+```bash
+# 1. Convert raw JSONL data to CSV
+python jsonl2csv.py
+
+# 2. Ingest data into Neo4j Aura
+python auraimport.py       # or: bash bulk.sh for bulk loading
+
+# 3. Navigate to the deployment folder
+cd deployment
+
+# 4. Install dependencies
+npm install
+
+# 5. Configure environment variables
+# (create .env.local with Neo4j and Groq credentials)
+
+# 6. Run the app
+npm run dev                # development
+# or
+npm run build && npm start # production
+```
 
 ---
 
