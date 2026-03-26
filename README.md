@@ -119,6 +119,8 @@ python auraimport.py
 Connects to Neo4j Aura and executes batched Cypher queries to create nodes and relationships while enforcing uniqueness through schema constraints.
 
 <img width="1534" height="844" alt="Screenshot 2026-03-25 at 3 29 15 PM" src="https://github.com/user-attachments/assets/f3479686-0009-440f-8ee1-fb493a93ec8d" />
+<img width="1533" height="789" alt="Screenshot 2026-03-26 at 1 56 42 PM" src="https://github.com/user-attachments/assets/f9f35185-c41f-4a45-afa6-ceb5dbc37ce3" />
+
 
 ---
 
