@@ -139,7 +139,7 @@ This abstraction ensures:
 - Clear separation between user input and database logic
 - Controlled access to the graph structure
 
-<img width="387" height="816" alt="Screenshot 2026-03-25 at 4 20 20 PM" src="https://github.com/user-attachments/assets/8057e992-fd58-462a-8a5f-cffb9b161806" />
+<img width="386" height="440" alt="Screenshot 2026-03-26 at 10 52 23 AM" src="https://github.com/user-attachments/assets/b1195a1a-3dd9-4fba-b52a-83a71bd0fc6e" />
 
 ---
 
