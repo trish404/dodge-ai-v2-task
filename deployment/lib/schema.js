@@ -11,6 +11,9 @@ NODE LABELS & KEY PROPERTIES:
 - Delivery       : deliveryId, shippingPoint, overallGoodsMovementStatus, overallPickingStatus, creationDate, actualGoodsMovementDate
 - DeliveryItem   : delivItemId, deliveryDocument, deliveryDocumentItem, actualDeliveryQuantity, plant, storageLocation
 - Invoice        : invoiceId, billingDocumentType, totalNetAmount, currency, fiscalYear, isCancelled, billingDocumentDate, creationDate
+                   ⚠ isCancelled is stored as a STRING "true" or "false" — NOT a boolean.
+                   ALWAYS write inv.isCancelled = "true" or inv.isCancelled = "false" with quotes.
+                   NEVER write inv.isCancelled = true or inv.isCancelled = false without quotes.
 - InvoiceItem    : invoiceItemId, billingDocument, billingDocumentItem, material, billingQuantity, netAmount, currency
 - Payment        : paymentId, accountingDocument, amountInTransactionCurrency, currency, clearingDate, postingDate, glAccount
 - JournalEntry   : journalEntryId, accountingDocument, glAccount, amountInTransactionCurrency, currency, documentType, postingDate
@@ -89,10 +92,27 @@ MATCH (so:SalesOrder)-[:FULFILLED_BY]->(d:Delivery)
 WHERE NOT EXISTS { MATCH (d)-[:BILLED_AS]->(:Invoice) }
 RETURN DISTINCT so.salesOrderId AS salesOrderId, d.deliveryId AS deliveryId LIMIT 20
 
--- Invoices with no payment:
+-- Invoices with no payment (isCancelled is a STRING — quotes are mandatory):
 MATCH (inv:Invoice)
-WHERE NOT EXISTS { MATCH (inv)<-[:CLEARS]-(:Payment) } AND inv.isCancelled = false
+WHERE NOT EXISTS { MATCH (inv)<-[:CLEARS]-(:Payment) } AND inv.isCancelled = "false"
 RETURN DISTINCT inv.invoiceId AS invoiceId, inv.totalNetAmount AS amount, inv.billingDocumentDate AS date LIMIT 20
+
+-- Cancelled invoices (isCancelled is a STRING "true", not a boolean — quotes are mandatory, never omit them):
+MATCH (inv:Invoice)
+WHERE inv.isCancelled = "true"
+RETURN DISTINCT inv.invoiceId AS invoiceId, inv.totalNetAmount AS amount,
+       inv.billingDocumentDate AS date LIMIT 20
+
+-- Non-cancelled invoices only:
+MATCH (inv:Invoice)
+WHERE inv.isCancelled = "false"
+RETURN DISTINCT inv.invoiceId AS invoiceId, inv.totalNetAmount AS amount,
+       inv.billingDocumentDate AS date LIMIT 20
+
+-- Plants with most deliveries dispatched (direction: Plant<-DeliveryItem, NOT DeliveryItem->Plant):
+MATCH (p:Plant)<-[:DISPATCHED_FROM]-(d:DeliveryItem)
+RETURN p.name AS plant, p.plantId AS plantId, count(d) AS deliveries
+ORDER BY deliveries DESC LIMIT 10
 
 -- Full O2C flow trace (path query for edge highlighting):
 MATCH path = (c:Customer)-[:HAS_ORDER]->(so:SalesOrder)-[:FULFILLED_BY]->(d:Delivery)-[:BILLED_AS]->(inv:Invoice)
@@ -127,7 +147,12 @@ RULES — follow ALL strictly:
 
 7. CONTEXT: If the user says "was it delivered?" or "show me the payment" after a prior order trace, reuse the order ID from conversation history.
 
-8. OUTPUT FORMAT: Return ONLY valid JSON, no markdown fences, no explanation:
+8. isCancelled TYPE — CRITICAL: Invoice.isCancelled is stored as a STRING. Always use:
+   inv.isCancelled = "true"   ← for cancelled invoices
+   inv.isCancelled = "false"  ← for active invoices
+   NEVER use inv.isCancelled = true or inv.isCancelled = false without quotes. This will always return 0 rows.
+
+9. OUTPUT FORMAT: Return ONLY valid JSON, no markdown fences, no explanation:
 
 {"isOnTopic":true,"cypher":"MATCH ...","intent":"brief description","offTopicResponse":null}
 
