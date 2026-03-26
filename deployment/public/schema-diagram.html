@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SAP O2C Graph Schema</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1117;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 32px 16px;
+    color: #e2e8f0;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 32px;
+  }
+  .diagram-wrap {
+    width: 100%;
+    max-width: 940px;
+    background: #111827;
+    border: 1px solid #1e293b;
+    border-radius: 20px;
+    padding: 40px 32px;
+    position: relative;
+  }
+  svg.schema { width: 100%; height: auto; display: block; }
+
+  /* Node boxes */
+  .node-box rect {
+    rx: 12; ry: 12;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+  .node-label { font-size: 14px; font-weight: 700; fill: #fff; }
+  .node-props { font-size: 10px; fill: rgba(255,255,255,0.68); }
+
+  /* Edges */
+  .edge { stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+  .edge-dashed { stroke-dasharray: 6 4; }
+  .edge-label {
+    font-size: 9.5px;
+    fill: #94a3b8;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid #1e293b;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<h1>SAP Order-to-Cash — Graph Schema</h1>
+<p class="subtitle">Neo4j Aura · Node labels, key properties & relationships</p>
+
+<div class="diagram-wrap">
+<svg class="schema" viewBox="0 0 880 700" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f59e0b"/>
+    </marker>
+  </defs>
+
+  <!-- ─── NODES ─── -->
+
+  <!-- Customer (Core flow) -->
+  <g class="node-box" transform="translate(40,40)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#1D9E75" stroke="#0F6E56" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">Customer</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">name · category</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">isBlocked · customerId</text>
+  </g>
+
+  <!-- Address (Master data) -->
+  <g class="node-box" transform="translate(520,40)">
+    <rect width="150" height="68" rx="12" ry="12" fill="#64748b" stroke="#475569" stroke-width="1.5"/>
+    <text class="node-label" x="75" y="24" text-anchor="middle">Address</text>
+    <text class="node-props" x="75" y="42" text-anchor="middle">city · region</text>
+    <text class="node-props" x="75" y="56" text-anchor="middle">street · country</text>
+  </g>
+
+  <!-- SalesOrder (Core flow) -->
+  <g class="node-box" transform="translate(40,200)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#378ADD" stroke="#185FA5" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">SalesOrder</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">type · amount</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">status · salesOrderId</text>
+  </g>
+
+  <!-- SalesOrderItem (Core flow) -->
+  <g class="node-box" transform="translate(300,200)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#378ADD" stroke="#185FA5" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">SalesOrderItem</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">qty · amount</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">category · material</text>
+  </g>
+
+  <!-- Product (Product) -->
+  <g class="node-box" transform="translate(560,200)">
+    <rect width="150" height="68" rx="12" ry="12" fill="#7F77DD" stroke="#534AB7" stroke-width="1.5"/>
+    <text class="node-label" x="75" y="24" text-anchor="middle">Product</text>
+    <text class="node-props" x="75" y="42" text-anchor="middle">type · group</text>
+    <text class="node-props" x="75" y="56" text-anchor="middle">weight · productId</text>
+  </g>
+
+  <!-- Delivery (Logistics) -->
+  <g class="node-box" transform="translate(40,370)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#EF9F27" stroke="#BA7517" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">Delivery</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">shippingPoint</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">status · deliveryId</text>
+  </g>
+
+  <!-- DeliveryItem (Logistics) -->
+  <g class="node-box" transform="translate(300,370)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#EF9F27" stroke="#BA7517" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">DeliveryItem</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">qty · plant</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">location · itemId</text>
+  </g>
+
+  <!-- Plant (Master data) -->
+  <g class="node-box" transform="translate(560,370)">
+    <rect width="150" height="68" rx="12" ry="12" fill="#64748b" stroke="#475569" stroke-width="1.5"/>
+    <text class="node-label" x="75" y="24" text-anchor="middle">Plant</text>
+    <text class="node-props" x="75" y="42" text-anchor="middle">name · salesOrg</text>
+    <text class="node-props" x="75" y="56" text-anchor="middle">channel · plantId</text>
+  </g>
+
+  <!-- Invoice (Billing) -->
+  <g class="node-box" transform="translate(40,540)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#D85A30" stroke="#993C1D" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">Invoice</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">amount · date</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">cancelled · invoiceId</text>
+  </g>
+
+  <!-- InvoiceItem (Billing) -->
+  <g class="node-box" transform="translate(300,540)">
+    <rect width="160" height="68" rx="12" ry="12" fill="#D85A30" stroke="#993C1D" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">InvoiceItem</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">qty · amount</text>
+    <text class="node-props" x="80" y="56" text-anchor="middle">material · itemId</text>
+  </g>
+
+  <!-- Payment (Finance) -->
+  <g class="node-box" transform="translate(40,630)">
+    <rect width="160" height="58" rx="12" ry="12" fill="#639922" stroke="#3B6D11" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">Payment</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">amount · date · clearing</text>
+  </g>
+
+  <!-- JournalEntry (Finance) -->
+  <g class="node-box" transform="translate(300,630)">
+    <rect width="160" height="58" rx="12" ry="12" fill="#534AB7" stroke="#3C3489" stroke-width="1.5"/>
+    <text class="node-label" x="80" y="24" text-anchor="middle">JournalEntry</text>
+    <text class="node-props" x="80" y="42" text-anchor="middle">glAccount · docType</text>
+  </g>
+
+  <!-- ─── EDGES ─── -->
+
+  <!-- Customer → Address -->
+  <path class="edge" stroke="#475569" d="M200,74 Q360,20 520,74"/>
+  <text class="edge-label" x="360" y="38" text-anchor="middle">HAS_ADDRESS</text>
+
+  <!-- Customer → SalesOrder -->
+  <path class="edge" stroke="#1D9E75" d="M120,108 L120,200"/>
+  <text class="edge-label" x="130" y="160" text-anchor="start">HAS_ORDER</text>
+
+  <!-- SalesOrder → SalesOrderItem -->
+  <path class="edge" stroke="#378ADD" d="M200,234 L300,234"/>
+  <text class="edge-label" x="250" y="224" text-anchor="middle">HAS_ITEM</text>
+
+  <!-- SalesOrderItem → Product -->
+  <path class="edge" stroke="#7F77DD" d="M460,234 L560,234"/>
+  <text class="edge-label" x="510" y="224" text-anchor="middle">FOR_PRODUCT</text>
+
+  <!-- SalesOrder → Delivery -->
+  <path class="edge" stroke="#EF9F27" d="M120,268 L120,370"/>
+  <text class="edge-label" x="130" y="325" text-anchor="start">FULFILLED_BY</text>
+
+  <!-- Delivery → DeliveryItem -->
+  <path class="edge" stroke="#EF9F27" d="M200,404 L300,404"/>
+  <text class="edge-label" x="250" y="394" text-anchor="middle">HAS_ITEM</text>
+
+  <!-- DeliveryItem → SalesOrderItem (dashed upward) -->
+  <path class="edge edge-dashed" stroke="#94a3b8" d="M380,370 L380,268"/>
+  <text class="edge-label" x="392" y="320" text-anchor="start">SHIPS</text>
+
+  <!-- DeliveryItem → Plant -->
+  <path class="edge" stroke="#64748b" d="M460,404 L560,404"/>
+  <text class="edge-label" x="510" y="394" text-anchor="middle">DISPATCHED_FROM</text>
+
+  <!-- Product → Plant (dashed) -->
+  <path class="edge edge-dashed" stroke="#94a3b8" d="M635,268 L635,370"/>
+  <text class="edge-label" x="645" y="320" text-anchor="start">STORED_AT</text>
+
+  <!-- Delivery → Invoice -->
+  <path class="edge" stroke="#D85A30" d="M120,438 L120,540"/>
+  <text class="edge-label" x="130" y="495" text-anchor="start">BILLED_AS</text>
+
+  <!-- Invoice → InvoiceItem -->
+  <path class="edge" stroke="#D85A30" d="M200,574 L300,574"/>
+  <text class="edge-label" x="250" y="564" text-anchor="middle">HAS_ITEM</text>
+
+  <!-- InvoiceItem → Product (dashed long) -->
+  <path class="edge edge-dashed" stroke="#7F77DD" d="M460,558 Q530,480 635,438"/>
+  <text class="edge-label" x="565" y="488" text-anchor="middle">FOR_PRODUCT</text>
+
+  <!-- Customer → Invoice (dashed left side) -->
+  <path class="edge edge-dashed" stroke="#94a3b8" d="M40,108 Q0,330 40,540"/>
+  <text class="edge-label" transform="translate(2,330) rotate(-90)" text-anchor="middle">ISSUED_INVOICE</text>
+
+  <!-- Payment → Invoice -->
+  <path class="edge" stroke="#639922" d="M120,630 L120,608"/>
+  <text class="edge-label" x="130" y="622" text-anchor="start">CLEARS</text>
+
+  <!-- Customer → Payment (dashed far left) -->
+  <path class="edge edge-dashed" stroke="#94a3b8" d="M40,74 Q-20,500 40,630"/>
+  <text class="edge-label" transform="translate(-14,360) rotate(-90)" text-anchor="middle">MADE_PAYMENT</text>
+
+  <!-- JournalEntry → InvoiceItem -->
+  <path class="edge" stroke="#534AB7" d="M380,630 L380,608"/>
+  <text class="edge-label" x="390" y="622" text-anchor="start">RECORDS</text>
+
+  <!-- Invoice → Invoice CANCELS (self-loop) -->
+  <path class="edge edge-dashed" stroke="#94a3b8" d="M200,570 Q240,590 220,556 Q200,540 200,570" style="marker-end:url(#arrow)"/>
+  <text class="edge-label" x="250" y="562" text-anchor="start">CANCELS</text>
+
+</svg>
+
+<!-- Legend -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Core flow (Customer, SalesOrder, SalesOrderItem)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#EF9F27"></div>Logistics (Delivery, DeliveryItem)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div>Billing (Invoice, InvoiceItem)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#639922"></div>Finance (Payment)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div>Finance (JournalEntry)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>Product</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div>Master data (Address, Plant)</div>
+</div>
+</div>
+
+</body>
+</html>

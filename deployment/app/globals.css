@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Hard-coded dark base so layout works even before Tailwind utilities apply ── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #0d1117;
+  color: #e2e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Force the main app shell to fill the viewport */
+#__next, main { height: 100%; }
+
+/* Tailwind arbitrary-value safeguards */
+.bg-\[\#0d1117\]  { background-color: #0d1117 !important; }
+.bg-\[\#111827\]  { background-color: #111827 !important; }
+.bg-\[\#1a2235\]  { background-color: #1a2235 !important; }
+.bg-\[\#1e2a3d\]  { background-color: #1e2a3d !important; }
+.h-screen { height: 100vh !important; }
+.flex { display: flex !important; }
+.flex-col { flex-direction: column !important; }
+.flex-1 { flex: 1 1 0% !important; }
+.overflow-hidden { overflow: hidden !important; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1e2330; }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Chat bubble animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.chat-bubble { animation: fadeIn 0.2s ease-out; }
