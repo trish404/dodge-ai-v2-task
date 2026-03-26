@@ -110,8 +110,6 @@ This produces CSV files inside the `csv/` directory, organized by entity type.
 
 **Stage 2 — Ingestion into Neo4j Aura**
 
-Two ingestion methods are supported:
-
 * Python-based Cypher import (`auraimport.py`):*
 
 ```bash
