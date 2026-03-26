@@ -73,13 +73,11 @@ A structural audit of all dataset files was performed using `audit.py` to valida
 
 ## Architecture Decisions
 
-> ✏️ **[NEW SECTION]**
-
 The system is designed around three core principles: **traceability**, **separation of concerns**, and **controlled LLM access**.
 
 ### Graph-First Data Model
 
-Rather than loading O2C data into a relational or document store, the system models the entire business process as a property graph. Each business entity (Customer, SalesOrder, Delivery, Invoice, Payment, etc.) becomes a node, and the transitions between them (e.g., `FULFILLED_BY`, `BILLED_AS`, `CLEARS`) become typed, directed relationships.
+Rather than loading O2C data into a relational or document store, the system models the entire business process as a property graph. Each business entity (Customer, SalesOrder, Delivery, Invoice, Payment, etc.) becomes a node, and the transitions between them (e.g., `FULFILLED_BY`, `BILLED_AS`, `CLEARS`) become relationships.
 
 This decision was driven by the nature of the O2C process itself — it is inherently a chain of connected events. A graph model makes traversal across that chain a first-class operation rather than a series of expensive joins. It also preserves incomplete flows (e.g., orders with no delivery, invoices with no payment) as natural gaps in the graph, which are immediately surfaced during querying rather than hidden by null handling.
 
@@ -102,8 +100,6 @@ The UI is intentionally stateless on the client side. All graph queries are exec
 ---
 
 ## Database Choice — Why Neo4j Aura
-
-> ✏️ **[NEW SECTION]**
 
 Neo4j was selected as the primary database for this system for the following reasons:
 
@@ -186,7 +182,6 @@ This abstraction ensures:
 
 ## LLM Interface & Prompting Strategy
 
-> ✏️ **[SECTION EXPANDED — prompting strategy added]**
 
 A Large Language Model (LLM) is integrated via Groq to enable natural language interaction with the system, allowing users to query the graph intuitively without needing to understand its underlying structure.
 
@@ -212,7 +207,6 @@ The LLM is prompted with a **system prompt** that establishes a strict operation
 
 ## Guardrails
 
-> ✏️ **[NEW SECTION]**
 
 Given that the system connects a public-facing UI to a live graph database via an LLM, guardrails are applied at multiple layers to prevent unsafe, incorrect, or unpredictable behaviour.
 
