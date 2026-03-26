@@ -28,7 +28,9 @@ The system integrates Neo4j Aura for scalable graph storage, a query abstraction
 ├── jsonl2csv.py                # JSONL → CSV transformation script
 ├── load.cypher                 # Cypher queries for schema constraints & loading
 ├── .gitignore
+├── audit.py                    #Auditing the entire dataset
 └── README.md
+
 ```
 
 ---
@@ -65,6 +67,7 @@ Each folder corresponds to a specific domain:
 - `plants`, `customer_company_assignments`, `customer_sales_area_assignments`
 
 Each `.jsonl` file contains line-separated JSON records that collectively capture different stages of the O2C lifecycle, with implicit relationships formed through shared identifiers (e.g., order IDs, document numbers, customer IDs). The dataset is highly normalized and distributed, requiring integration across multiple sources to reconstruct complete business flows.
+This audit was done using the audit.py
 
 ---
 
@@ -109,22 +112,13 @@ This produces CSV files inside the `csv/` directory, organized by entity type.
 
 Two ingestion methods are supported:
 
-*Option A — Python-based Cypher import (`auraimport.py`):*
+* Python-based Cypher import (`auraimport.py`):*
 
 ```bash
 python auraimport.py
 ```
 
 Connects to Neo4j Aura and executes batched Cypher queries to create nodes and relationships while enforcing uniqueness through schema constraints.
-
-*Option B — Bulk import via shell script (`bulk.sh`):*
-
-```bash
-bash bulk.sh
-```
-You can also run the Cypher constraints and load queries manually using `load.cypher` in the Neo4j Aura browser console.
-
-This hybrid approach combines the efficiency of bulk import with the flexibility of Cypher-based ingestion, enabling scalable and reliable graph construction in Neo4j Aura.
 
 <img width="1534" height="844" alt="Screenshot 2026-03-25 at 3 29 15 PM" src="https://github.com/user-attachments/assets/f3479686-0009-440f-8ee1-fb493a93ec8d" />
 
@@ -160,9 +154,9 @@ The visualization enables:
 - Visual tracing of end-to-end O2C flows
 - Identification of missing or incomplete links
 
-Node types are visually distinguished, and relationships are represented as directional connections, allowing users to intuitively navigate complex transactional structures.
+Node types are visually distinguished, and relationships are represented as connections/edges, allowing users to intuitively navigate complex transactional structures.
 
-<img width="1337" height="877" alt="Screenshot 2026-03-25 at 4 25 53 PM" src="https://github.com/user-attachments/assets/b22719bb-e35c-48f1-9d0d-6523a9724ce5" />
+<img width="1339" height="926" alt="Screenshot 2026-03-26 at 1 32 39 PM" src="https://github.com/user-attachments/assets/30b49df1-bc50-4e10-8268-34fdf921e749" />
 
 ---
 
