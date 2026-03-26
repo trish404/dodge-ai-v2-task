@@ -168,6 +168,8 @@ The UI allows users to:
 - View structured outputs and graph insights
 
 The interface acts as a bridge between the user, the LLM layer, and the graph database.
+<img width="1727" height="922" alt="Screenshot 2026-03-26 at 1 36 36 PM" src="https://github.com/user-attachments/assets/796c05fd-66df-4ee4-9203-17a94471a2a4" />
+
 
 ---
 
