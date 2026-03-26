@@ -28,7 +28,7 @@ The system integrates Neo4j Aura for scalable graph storage, a query abstraction
 ├── jsonl2csv.py                # JSONL → CSV transformation script
 ├── load.cypher                 # Cypher queries for schema constraints & loading
 ├── .gitignore
-├── audit.py                    #Auditing the entire dataset
+├── audit.py                    # Auditing the entire dataset
 └── README.md
 
 ```
